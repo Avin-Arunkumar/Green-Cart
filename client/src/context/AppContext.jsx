@@ -19,7 +19,7 @@ export const AppContextProvider = ({ children }) => {
     setProducts(dummyProducts);
   };
   //Add Product to cart
-  const addToCart = () => {
+  const addToCart = (itemId) => {
     let cartData = structuredClone(cartItems);
 
     if (cartData[itemId]) {
