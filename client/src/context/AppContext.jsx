@@ -61,14 +61,17 @@ export const AppContextProvider = ({ children }) => {
   };
   // Get cart Total Amount
   const getCartAmount = () => {
-    let totalAmount = 0;
-    for (const items in cartItems) {
-      let itemInfo = products.find((product) => product._id === items);
-      if (cartItems[items] > 0) {
-        totalAmount += itemInfo.offerprice * cartItems[items];
+    let total = 0;
+    for (const key in cartItems) {
+      const product = products.find(
+        (item) =>
+          String(item.id) === String(key) || String(item._id) === String(key)
+      );
+      if (product && cartItems[key] > 0) {
+        total += (product.offerPrice || 0) * cartItems[key];
       }
     }
-    return Math.floor(totalAmount * 100) / 100;
+    return total;
   };
 
   useEffect(() => {
