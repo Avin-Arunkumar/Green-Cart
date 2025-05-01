@@ -38,7 +38,7 @@ const ProductDetails = () => {
           <Link to={`/products/${product.category.toLowerCase()}`}>
             {product.category}
           </Link>{" "}
-          /<span className="text-indigo-500"> {product.name}</span>
+          /<span className="text-primary/100"> {product.name}</span>
         </p>
 
         <div className="flex flex-col md:flex-row gap-16 mt-4">
@@ -108,7 +108,7 @@ const ProductDetails = () => {
                   addToCart(product._id);
                   navigate("/cart");
                 }}
-                className="w-full py-3.5 cursor-pointer font-medium bg-indigo-500 text-white hover:bg-indigo-600 transition"
+                className="w-full py-3.5 cursor-pointer font-medium bg-primary text-white hover:bg-primary-dull transition"
               >
                 Buy now
               </button>
@@ -122,7 +122,7 @@ const ProductDetails = () => {
             <p className="font-medium text-3xl">Related Products</p>
             <div className="w-20 h-0.5 bg-primary rounded-full mt-2"></div>
           </div>
-          <div className="grid  gird-cols-1 gap-1 md:grid-cols-4 gap-6 mt-10  ">
+          <div className="grid  gird-cols-1 gap-1 md:grid-cols-4 md:gap-6 mt-10  ">
             {relatedProducts
               .filter((product) => product.inStock)
               .map((product, index) => (
@@ -130,6 +130,9 @@ const ProductDetails = () => {
               ))}
           </div>
           <button
+            onClick={() => {
+              navigate("/products");
+            }}
             className="mx-auto cursor-pointer px-12 my-16 py-2.5 border
           rounded text-primary hover:bg-primary/10 transition"
           >
