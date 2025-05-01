@@ -2,23 +2,29 @@ import React, { useEffect, useState } from "react";
 import { useAppContext } from "../context/AppContext";
 import { Link, useParams } from "react-router-dom";
 import { assets } from "../assets/assets";
+import ProductCard from "../components/ProductCard";
 
 const ProductDetails = () => {
   const { products, navigate, currency, addToCart } = useAppContext();
   const { id } = useParams();
 
-  const [relatedProducts, SetRelatedProducts] = useState([]);
+  const [relatedProducts, setRelatedProducts] = useState([]);
   const [thumbnail, setThumbnail] = useState(null);
-  const product = products.find((item) => item._id === id);
+
+  const product = products.find((item) => item._id == id); // Use == to allow string/number match
+
   useEffect(() => {
-    if ((product || "").lenght > 0) {
+    if (products.length > 0 && product && product.category) {
       let productsCopy = products.slice();
       productsCopy = productsCopy.filter(
-        (item) => product.category === item.category
+        (item) => item.category === product.category && item._id !== product._id
       );
-      SetRelatedProducts(productsCopy.slice(0, 5));
+      setRelatedProducts(productsCopy.slice(0, 5));
+
+      console.log("Product category:", product.category);
+      console.log("Filtered Related Products:", productsCopy.slice(0, 5));
     }
-  }, [products]);
+  }, [products, product]);
 
   useEffect(() => {
     setThumbnail(product?.image[0] ? product.image[0] : null);
@@ -62,6 +68,7 @@ const ProductDetails = () => {
                 .fill("")
                 .map((_, i) => (
                   <img
+                    key={i}
                     src={i < 4 ? assets.star_icon : assets.star_dull_icon}
                     alt="star-icon"
                     className="md:w-4 w-3.5"
@@ -107,6 +114,27 @@ const ProductDetails = () => {
               </button>
             </div>
           </div>
+        </div>
+
+        {/* -------------- related products ------------------*/}
+        <div className="flex flex-col items-center mt-20">
+          <div className="flex flex-col items-center w-max">
+            <p className="font-medium text-3xl">Related Products</p>
+            <div className="w-20 h-0.5 bg-primary rounded-full mt-2"></div>
+          </div>
+          <div className="grid  gird-cols-1 gap-1 md:grid-cols-4 gap-6 mt-10  ">
+            {relatedProducts
+              .filter((product) => product.inStock)
+              .map((product, index) => (
+                <ProductCard key={index} product={product} />
+              ))}
+          </div>
+          <button
+            className="mx-auto cursor-pointer px-12 my-16 py-2.5 border
+          rounded text-primary hover:bg-primary/10 transition"
+          >
+            See More
+          </button>
         </div>
       </div>
     )
