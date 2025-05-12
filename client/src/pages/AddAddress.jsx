@@ -26,7 +26,7 @@ const AddAddress = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setAddress((prevAddress) => ({
-      ...AddAddress,
+      ...prevAddress,
       [name]: value,
     }));
   };
@@ -112,6 +112,12 @@ const AddAddress = () => {
               type="text"
               placeholder="Phone Number "
             />
+            <button
+              className="w-full mt-6 bg-primary text-white py-3 hover:bg-primary-dull
+            transition cursor-pointer uppercase"
+            >
+              Save address
+            </button>
           </form>
         </div>
         <img
