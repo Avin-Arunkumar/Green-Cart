@@ -13,6 +13,7 @@ import Cart from "./pages/Cart";
 import AddAddress from "./pages/AddAddress";
 import MyOreder from "./pages/MyOreder";
 import SellerLogin from "./components/seller/SellerLogin";
+import SellerLayout from "./pages/seller/SellerLayout";
 
 const App = () => {
   const isSellerPath = useLocation().pathname.includes("seller");
