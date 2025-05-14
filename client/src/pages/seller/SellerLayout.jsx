@@ -1,7 +1,7 @@
 import React from "react";
 import { useAppContext } from "../../context/AppContext";
 import { assets } from "../../assets/assets";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 
 const SellerLayout = () => {
   const { setIsSeller } = useAppContext();
@@ -48,15 +48,16 @@ const SellerLayout = () => {
               className={({ isActive }) => `flex items-center py-3 px-4 gap-3 
                             ${
                               isActive
-                                ? "border-r-4 md:border-r-[6px] bg-primary border-primary text-primary"
+                                ? "border-r-4 md:border-r-[6px] bg-primary/10 border-primary text-primary"
                                 : "hover:bg-gray-100/90 border-white text-gray-700"
                             }`}
             >
-              {item.icon}
+              <img src={item.icon} alt="" className="w-7 h-7" />
               <p className="md:block hidden text-center">{item.name}</p>
             </NavLink>
           ))}
         </div>
+        <Outlet />
       </div>
     </>
   );
