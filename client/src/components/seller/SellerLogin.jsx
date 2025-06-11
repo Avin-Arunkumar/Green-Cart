@@ -3,8 +3,8 @@ import { useAppContext } from "../../context/AppContext";
 
 const SellerLogin = () => {
   const { isSeller, setIsSeller, navigate } = useAppContext();
-  const [email, setmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setmail] = useState("admin@gamil.com");
+  const [password, setPassword] = useState("12345");
   const onSummitHandler = async (event) => {
     event.preventDefault();
     setIsSeller(true);
