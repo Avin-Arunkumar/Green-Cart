@@ -2,24 +2,63 @@ import { v2 as cloudinary } from "cloudinary";
 import Product from "../models/product.js";
 
 //Add Product :/api/product/add
+// export const addProduct = async (req, res) => {
+//   try {
+//     let productData = JSON.parse(req.body.productData);
+
+//     const images = req.files;
+//     let imagesUrl = await Promise.all(
+//       images.map(async (item) => {
+//         let result = await cloudinary.uploader.upload(item.path, {
+//           resource_type: "image",
+//         });
+//         return result.secure_url;
+//       })
+//     );
+//     await Product.create({ ...productData, image: imagesUrl });
+//     res.json({ success: true, message: "Product Added" });
+//   } catch (error) {
+//     console.log(error.message);
+//     res.json({ success: false, message: error.message });
+//   }
+// };
 export const addProduct = async (req, res) => {
   try {
+    console.log("Request Body:", req.body);
+    console.log("Request Files:", req.files);
+
+    if (!req.body.productData) {
+      throw new Error("productData is missing");
+    }
     let productData = JSON.parse(req.body.productData);
+
+    if (!req.files || req.files.length === 0) {
+      throw new Error("No files uploaded");
+    }
 
     const images = req.files;
     let imagesUrl = await Promise.all(
       images.map(async (item) => {
-        let result = await cloudinary.uploader.upload(item.path, {
-          resource_type: "image",
-        });
-        return result.secure_url;
+        try {
+          console.log("Uploading file:", item.originalname);
+          let result = await cloudinary.uploader.upload(item.path, {
+            resource_type: "image",
+          });
+          console.log("Upload successful:", result.secure_url);
+          return result.secure_url;
+        } catch (uploadError) {
+          console.error("Cloudinary Upload Error:", uploadError.message);
+          throw uploadError;
+        }
       })
     );
-    await Product.create({ ...productData, image: imagesUrl });
+
+    const product = await Product.create({ ...productData, image: imagesUrl });
+    console.log("Product created:", product._id);
     res.json({ success: true, message: "Product Added" });
   } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: error.message });
+    console.error("Error in addProduct:", error.message, error.stack);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
