@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { assets, categories } from "../../assets/assets";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const AddProduct = () => {
   const [files, setFiles] = useState([]);
@@ -10,9 +12,40 @@ const AddProduct = () => {
   const [offerPrice, setOfferPrice] = useState("");
 
   const onsubmitHandler = async (e) => {
-    e.preventDefault();
+    try {
+      e.preventDefault();
+      console.log("Document Cookies:", document.cookie);
+      const productData = {
+        name,
+        description: description.split("\n"),
+        category,
+        price,
+        offerPrice,
+      };
+      const formData = new FormData();
+      formData.append("productData", JSON.stringify(productData));
+      for (let i = 0; i < files.length; i++) {
+        if (files[i]) formData.append("image", files[i]);
+      }
+      console.log([...formData.entries()]);
+      const { data } = await axios.post("/api/product/add", formData, {
+        withCredentials: true,
+      });
+      if (data.success) {
+        toast.success(data.message);
+        setName("");
+        setDescription("");
+        setCategory("");
+        setPrice("");
+        setOfferPrice("");
+        setFiles([]);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
-
   return (
     <div className="no-scrollbar flex-1 h-[95vh] overflow-y-scroll flex flex-col justify-between">
       <form
@@ -94,7 +127,9 @@ const AddProduct = () => {
           >
             <option value="">Select Category</option>
             {categories.map((item, index) => (
-              <option key={index} value={item.path}></option>
+              <option key={index} value={item.path}>
+                {item.path}
+              </option>
             ))}
           </select>
         </div>
